@@ -88,6 +88,31 @@ zjuthesis 模板有三种使用方式，Overleaf，本地编译，或者 Contain
 > - 本模板已经兼容 TeXLive 2021。TeXLive 2018 以及之前的版本复制伪粗体文字会产生乱码，建议使用本地 TeXLive 的同学使用最新版 TeXLive。
 > - 计算机专业的部分页面与学校通用格式不同，如果你是计算机专业的同学，请使用计算机专业的模板。
 
+### Docker 编译
+
+本模板提供了根目录下的 `Dockerfile`，可直接使用 Docker 编译论文，无需本地安装 TeX Live。
+
+1. 构建镜像（首次使用）
+   ```bash
+   docker build -t zjuthesis-auto .
+   ```
+1. 单次编译
+   ```bash
+   docker run --rm -v "$PWD:/workspace" zjuthesis-auto latexmk
+   ```
+1. 自动监听文件变化（保存 `.tex` 自动重新编译）
+   ```bash
+   # 前台运行
+   docker run --rm -v "$PWD:/workspace" zjuthesis-auto latexmk -pvc -view=none
+
+   # 后台运行
+   docker run -d --name zjuthesis-watch -v "$PWD:/workspace" zjuthesis-auto latexmk -pvc -view=none
+   docker logs -f zjuthesis-watch   # 查看实时编译日志
+   docker stop zjuthesis-watch && docker rm zjuthesis-watch   # 停止监听
+   ```
+
+编译生成的 PDF 位于 `out/zjuthesis.pdf`。
+
 ### 在 Dev Containers 中使用
 
 本模板提供了一套配置文件，用以支持在 [Dev Containers](https://containers.dev/) 中安装 TeX Live，项目使用的字体，以及 VS Code上的 [LaTeX Workshop](https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop) 插件，以实现对本项目的开箱即用。感谢 [futuretech6](https://github.com/futuretech6) 同学贡献的[代码](https://github.com/TheNetAdmin/zjuthesis/pull/222)。
