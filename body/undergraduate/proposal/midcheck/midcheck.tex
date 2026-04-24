@@ -3,8 +3,135 @@
 
 \section{项目概况}
 
+\par 本项目旨在设计与实现一个面向注意缺陷多动障碍（ADHD）人群的智能辅助管理系统——AI4ADHD。ADHD 患者在任务规划、时间管理和项目执行方面存在显著困难，现有工具缺乏针对该群体的智能化、个性化支持。本项目采用前后端分离的 B/S 架构，结合大语言模型技术，构建一个集项目管理、任务追踪与 AI 智能辅导于一体的完整 Web 应用，帮助 ADHD 用户更高效地组织日常事务。
+
+\par 系统后端基于 Spring Boot 3.5.7 构建，选用 Java 21 作为开发语言，持久层使用 PostgreSQL 15 与 Redis 7，ORM 框架采用 MyBatis Plus 3.5.14。前端采用现代前端框架开发，与后端 RESTful API 对接。AI 能力通过 Spring AI Alibaba（DashScope）接入通义千问大模型，实现智能对话与任务辅助。项目配套 Docker Compose 开发环境，支持一键启动基础设施服务。
+
+\par 截至目前，本项目整体开发进度良好。后端核心功能模块（用户管理、项目管理、Agent）已全部完成开发并覆盖测试；前端各功能页面（登录、项目管理、任务看板、AI 对话等）已与后端 API 完成对接开发；数据库 Schema 设计、接口文档（Swagger/OpenAPI）及持续集成基础均已就绪。后续工作将聚焦于系统联调优化、AI 效果精调及毕业设计论文撰写。
+
 \section{工作进展情况}
+
+\subsection{系统架构设计}
+
+\par 系统整体采用经典的前后端分离架构，前端通过 HTTP 请求与后端 RESTful API 通信，后端内部采用分层领域驱动设计，划分为用户域、项目域、AI 代理域及安全模块。
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{architecture.png}
+    \caption{系统总体架构图}
+\end{figure}
+
+\par 如图所示，前端应用通过 Nginx 或直接访问后端服务，后端基于 Spring Security + JWT 实现统一认证鉴权，业务数据持久化至 PostgreSQL，会话及缓存数据存储于 Redis。AI 模块通过 Spring AI Alibaba 调用 DashScope 大模型 API，同时通过自定义工具实时查询用户项目数据，实现上下文感知的智能回复。
+
+\subsection{用户模块}
+
+\par 用户模块已完成基于手机短信验证码的登录体系，集成阿里云号码短信验证服务（支持调试模式与生产模式）。采用 JWT 实现无状态认证，自定义了认证过滤器与认证上下文以支持请求级用户上下文传递。完成了用户注册、登录、信息查询与资料更新接口的开发，所有接口均配备参数校验与统一异常处理。
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.2\linewidth]{login.png}
+    \hspace{0.1\linewidth}
+    \includegraphics[width=0.2\linewidth]{home.png}
+    \hspace{0.1\linewidth}
+    \includegraphics[width=0.2\linewidth]{mine.png}
+    \caption{用户模块前端页面预览}
+\end{figure}
+
+\subsection{项目管理模块}
+
+\par 项目管理模块已实现完整的 CRUD 及批量操作能力，主要包括以下子功能：
+\begin{itemize}
+    \item \textbf{项目管理}：支持项目的创建、分页查询、更新、删除及批量操作，业务属性涵盖优先级、状态、复杂度、截止日期等；
+    \item \textbf{任务管理}：以项目为维度进行任务拆分与追踪，支持任务状态流转与批量更新；
+    \item \textbf{标签管理}：提供带颜色标识的标签体系，支持项目与标签的多对多关联；
+    \item \textbf{项目视图}：通过数据库视图聚合项目、标签与任务数据，为前端提供一站式查询能力，减少多次请求。
+\end{itemize}
+
+\par 该域严格遵循分层架构，包含 Controller、Service、Repository、Converter、Mapper、PO 等完整层次，所有接口均配备 Swagger 文档及 Controller 层集成测试。
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.2\linewidth]{dashboard.png}
+    \hspace{0.05\linewidth}
+    \includegraphics[width=0.2\linewidth]{project.png}
+    \hspace{0.05\linewidth}
+    \includegraphics[width=0.2\linewidth]{focus.png}
+    \hspace{0.05\linewidth}
+    \includegraphics[width=0.2\linewidth]{edit.png}
+    \caption{项目管理模块前端页面预览}
+\end{figure}
+
+\subsection{Agent 模块}
+
+\par Agent 模块已完成智能辅导核心功能的设计与实现：
+\begin{itemize}
+    \item \textbf{会话与聊天管理}：实现了 Session 与 Chat 的完整 CRUD，支持批量创建、更新、删除及分页查询；
+    \item \textbf{AI Graph 工作流}：基于 Spring AI Alibaba Agent Framework 构建了 ReAct 风格的 AI 代理工作流，包含路由节点用于意图识别与分支处理；
+    \item \textbf{工具调用}：开发了项目视图上下文查询工具与操作工具，使 AI 能够实时获取用户项目数据并辅助决策；
+    \item \textbf{状态持久化}：基于 Redis 实现了单用户级 Graph 检查点保存，确保多轮对话上下文不丢失；
+    \item \textbf{上下文组装}：设计了 Agent 上下文模型，将用户项目、任务、标签信息结构化注入 AI Prompt，提升回复的相关性与准确性。
+\end{itemize}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.2\linewidth]{create.png}
+    \hspace{0.1\linewidth}
+    \includegraphics[width=0.2\linewidth]{decomposition.png}
+    \caption{Agent 模块前端页面预览}
+\end{figure}
+
+\subsection{数据库设计}
+
+\par 数据库 Schema 设计已完成，共包含 7 张核心数据表：\texttt{users}（用户）、\texttt{projects}（项目）、\texttt{tasks}（任务）、\texttt{tags}（标签）、\texttt{project\_tag}（项目标签关联）、\texttt{sessions}（AI 会话）、\texttt{chats}（聊天消息）。所有主键均采用 UUID7，时间戳统一使用 TIMESTAMPTZ（UTC），并建立了完整的外键约束与查询索引。此外，创建了 \texttt{view\_projects} 视图用于聚合项目及其关联的标签与任务数据。
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{database.png}
+    \caption{数据库 ER 图}
+\end{figure}
+
+\subsection{测试覆盖}
+
+\par 项目已编写覆盖核心模块的测试类，涵盖各类 Controller 和短信验证服务。测试采用 SpringBootTest 结合 MockMvc 进行集成测试，并配备 TestCleanupUtils 工具实现数据库与 Redis 的自动化清理，确保测试环境隔离与可重复执行。如图所示，全部 123 个测试用例运行通过（0 失败、0 错误、6 跳过），构建成功，验证了接口正确性、参数校验、异常处理及第三方服务集成逻辑。
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{test.png}
+    \caption{后端测试覆盖率与运行结果}
+\end{figure}
+
+\par 此外，后端集成了 SpringDoc OpenAPI，自动生成基于 OAS 3.1 规范的 Swagger UI 与 OpenAPI 接口文档，已随服务部署至线上环境，便于前端开发人员在线查阅与调试各业务模块接口（如 Agent、Chat、Actuator 等）。
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{swagger.png}
+    \caption{Swagger 接口文档预览}
+\end{figure}
 
 \section{问题与建议}
 
+\par Agent 模块虽然框架已搭建完成，但大模型在 ADHD 场景下的提示工程（Prompt Engineering）和工具调用链仍有优化空间。RouterNode 的意图分类准确率需要在真实使用场景中持续迭代，建议后续引入更多用户行为数据作为 Few-shot 示例以提升分类效果。
+
+\par 当前系统在交互方式上仍以文本输入为主，尚未实现语音输入输出功能，对于部分在文本输入上存在困难的 ADHD 用户而言，操作门槛仍然较高。建议在后续迭代中集成语音识别与语音合成能力，支持用户通过语音与 AI Agent 进行自然交互，从而提升系统的易用性与无障碍体验。
+
+\par 此外，系统目前缺乏支付功能，尚未形成完整的商业化闭环，无法支持会员订阅、积分充值等增值服务模式。建议后续接入主流第三方支付平台，完善支付相关的订单、对账与退款流程，为系统的可持续运营提供基础。
+
+\par 当前仅提供了 Docker Compose 开发环境配置，生产环境的容器编排、监控告警、日志收集及 CI/CD 流水线尚未规划。建议在后期补充生产部署方案，或考虑使用云原生托管平台降低运维成本。
+
 \section{其他}
+
+\subsection{后续工作计划}
+
+\par 后续工作将按以下计划推进：
+\begin{enumerate}
+    \item \textbf{系统联调与优化}（第 9--10 周）：前后端进行端到端联调，修复接口对接与页面交互中的问题，优化 AI 对话响应速度，优化 AI 生成内容；
+    \item \textbf{语音输入输出功能}（第 10--11 周）：集成 Web Speech API 或第三方语音识别与合成服务，实现语音输入与语音播报功能，降低 ADHD 用户的文本输入负担，提升交互自然度；
+    \item \textbf{支付功能}（第 11--12 周）：接入支付宝或微信支付等主流支付渠道，实现会员订阅、积分充值等增值服务的支付闭环；
+    \item \textbf{系统测试与性能压测}（第 12--13 周）：完善端到端测试用例，开展关键接口的性能压测；
+    \item \textbf{论文撰写}（第 12--14 周）：整理系统设计文档，完成毕业设计论文初稿及修订；
+    \item \textbf{答辩准备}（第 14--16 周）：完善系统细节与演示数据，准备答辩 PPT 与演示视频。
+\end{enumerate}
+
+\subsection{总体评价}
+
+\par 本项目目前后端核心功能开发已全部完成，前端各对应页面已与后端 API 完成对接开发，数据库设计、接口文档及测试覆盖均已就绪，整体进度约为 85\%。后续工作重心将转移至系统联调优化、AI 效果精调与毕业论文撰写，预计能够按计划顺利完成毕业设计要求。
