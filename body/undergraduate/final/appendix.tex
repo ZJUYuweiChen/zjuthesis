@@ -1,0 +1,111 @@
+\cleardoublepage
+
+{
+    \sectionnonum{附录}
+
+    \appendixsubsecmajornumbering
+
+    % ============================================================
+    % 附录要求（毕业设计）：
+    %   - 源程序清单和有效程序光盘
+    %   - 数据库表结构详细定义
+    %   - 关键配置文件
+    %   - 其他补充材料
+    % ============================================================
+
+    \begin{table}[htbp]
+      \centering
+      \caption{系统运行环境要求}
+      \label{tab:env-requirements}
+      \begin{tabular}{p{4cm}p{9cm}}
+        \hline
+        项目 & 要求 \\
+        \hline
+        \multicolumn{2}{l}{\textbf{硬件环境}} \\
+        中央处理器 & 最低双核，生产环境建议四核及以上 \\
+        内存 & 最低 4GB，生产环境建议 8GB 及以上 \\
+        持久化存储 & 最低 24GB，生产环境建议 50GB 及以上 \\
+        网络 & 稳定带宽，确保可访问阿里云等云服务商接口 \\
+        存储介质 & 建议为数据目录配置独立固态硬盘 \\
+        \hline
+        \multicolumn{2}{l}{\textbf{软件环境}} \\
+        Docker & 24.0 及以上版本 \\
+        Docker Compose & 插件形式安装 \\
+        JDK & 21 \\
+        Maven & 3.9 及以上版本 \\
+        操作系统 & Alibaba Cloud Linux 4 \\
+        容器构建镜像 & Eclipse Temurin JDK 21 \\
+        容器运行镜像 & Eclipse Temurin JRE 21 Alpine \\
+        \hline
+      \end{tabular}
+    \end{table}
+
+    \begin{table}[htbp]
+      \centering
+      \caption{环境变量配置说明}
+      \label{tab:env-vars}
+      \begin{tabular}{p{6cm}p{7cm}}
+        \hline
+        变量名 & 说明 \\
+        \hline
+        \multicolumn{2}{l}{\textbf{数据库相关}} \\
+        POSTGRES\_DB & PostgreSQL 数据库名称 \\
+        POSTGRES\_USER & PostgreSQL 连接用户名 \\
+        POSTGRES\_PASSWORD & PostgreSQL 连接密码 \\
+        \hline
+        \multicolumn{2}{l}{\textbf{缓存相关}} \\
+        REDIS\_PASSWORD & Redis 容器访问认证密码 \\
+        \hline
+        \multicolumn{2}{l}{\textbf{安全相关}} \\
+        JWT\_SECRET & JWT 签名密钥 \\
+        JWT\_EXPIRATION & 访问令牌有效期，单位为秒 \\
+        \hline
+        \multicolumn{2}{l}{\textbf{云服务相关}} \\
+        DASHSCOPE\_API\_KEY & 阿里云百炼平台 API 密钥 \\
+        SMS\_ACCESS\_KEY\_ID & 阿里云短信服务访问密钥标识 \\
+        SMS\_ACCESS\_KEY\_SECRET & 阿里云短信服务访问密钥 \\
+        SMS\_SIGN\_NAME & 短信签名名称 \\
+        SMS\_TEMPLATE\_CODE & 短信模板代码 \\
+        VOICE\_ACCESS\_KEY\_ID & 阿里云智能语音交互服务访问 ID \\
+        VOICE\_ACCESS\_KEY\_SECRET & 阿里云智能语音交互服务访问密钥 \\
+        VOICE\_APP\_KEY & 阿里云智能语音交互服务应用标识 \\
+        \hline
+        \multicolumn{2}{l}{\textbf{网络相关}} \\
+        BACKEND\_PORT & 后端服务对外暴露端口 \\
+        \hline
+      \end{tabular}
+    \end{table}
+
+    \begin{table}[htbp]
+      \centering
+      \caption{生产环境部署命令}
+      \label{tab:deploy-prod}
+      \begin{tabular}{p{7cm}p{5.5cm}}
+        \hline
+        命令 & 说明 \\
+        \hline
+        \texttt{gh auth login} & 完成 GitHub CLI 认证 \\
+        \texttt{docker login ghcr.io} & 登录 GitHub 容器仓库 \\
+        \texttt{gh api ... | base64 -d | bash} & 获取并执行远程部署脚本 \\
+        \hline
+      \end{tabular}
+    \end{table}
+
+    \begin{table}[htbp]
+      \centering
+      \caption{本地开发环境部署命令}
+      \label{tab:deploy-local}
+      \begin{tabular}{p{9cm}p{3.5cm}}
+        \hline
+        命令 & 说明 \\
+        \hline
+        \texttt{./mvnw clean package -DskipTests} & Maven 编译打包 \\
+        \texttt{docker-compose up -d postgres redis} & 启动基础设施容器 \\
+        \texttt{./mvnw spring-boot:run} & 启动后端应用服务 \\
+        \hline
+      \end{tabular}
+    \end{table}
+
+    % End of appendix
+    \removeappendixsubsecmajornumbering
+}

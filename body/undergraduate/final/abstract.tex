@@ -3,8 +3,26 @@
     \bfseries \zihao{3} 摘~要
 \end{center}
 
+拖延与注意缺陷多动障碍（ADHD）是大学生与年轻知识工作者群体中普遍存在的自我调节问题。尽管已有数十年研究积累，现有干预手段——从传统认知行为疗法到通用任务管理应用——仍然面临可及性不足、用户依从性低以及无法有效触及任务启动困难的情绪与执行功能根源等局限。与此同时，大语言模型（LLM）与 ReAct 智能体范式的快速成熟，为个性化、低门槛的认知辅助提供了全新的技术路径。
+
+本项目设计并实现了面向 ADHD 与拖延人群的 AI 智能体驱动任务管理系统 Nudge。系统整合三大核心模块：项目与任务管理、基于 ReAct 的对话式 AI 智能体和游戏化激励机制。系统后端基于分布式技术栈构建，采用关系型数据库实现数据持久化，引入分布式缓存加速热点数据访问，并通过人工智能原生集成框架接入大语言模型能力。Nudge 采用领域驱动设计的分层架构，依据限界上下文原则划分为六个独立模块。其中 AI 智能体模块通过智能路由实现了用户意图分类，以最小权限工具完成操作委托，表现出较高的可控性和鲁棒性。
+
+系统提供了完整的 RESTful 接口集，功能测试实现了全面覆盖且全部通过。性能基准测试表明，系统具备低延迟与高吞吐能力，达到了生产级认知辅助服务的先进水平。本项目在心理健康领域完成了“AI 智能体 + 项目管理 + 游戏化激励”多元融合范式的工程化验证，沉淀了可复用的后端智能体架构。
+
+\vskip 21pt
+\noindent\textbf{关键词：}ADHD；拖延症；AI智能体；任务管理；大语言模型
+
 
 \cleardoublepage{}
 \begin{center}
     \bfseries \zihao{3} Abstract
 \end{center}
+
+Procrastination and Attention-Deficit/Hyperactivity Disorder (ADHD) represent pervasive self-regulation challenges among college students and young knowledge workers. Despite decades of research, existing interventions---ranging from traditional Cognitive Behavioral Therapy to generic task-management applications---suffer from limited accessibility, low user adherence, and a failure to address the emotional and executive-function roots of task-initiation difficulties. Meanwhile, the rapid maturation of Large Language Models (LLMs) and the ReAct agent paradigm offers a promising new pathway for personalized, low-barrier cognitive assistance.
+
+This thesis presents Nudge, an AI-agent-driven task-management system designed for individuals with ADHD and chronic procrastination. The system integrates three core modules: project and task management, a conversational AI agent based on the ReAct loop, and gamification incentives. Built atop a distributed backend stack with relational persistence, distributed caching, and an AI-native integration framework, Nudge adopts a layered, domain-driven architecture comprising six bounded-context modules. The AI agent module realizes user-intent classification through intelligent routing, delegates operations via minimally-privileged tools, and demonstrates high controllability and robustness.
+
+The system exposes a comprehensive suite of RESTful API endpoints. Functional testing achieves complete coverage with all test cases passing. Performance benchmarks demonstrate low end-to-end latency and high throughput, confirming that the system meets advanced levels for production-grade cognitive-assistance services. The thesis contributes an engineering validation of the ``AI agent + project management + gamification'' triad in the mental-health domain and a reusable backend-oriented agentic architecture.
+
+\vskip 21pt
+\noindent\textbf{Keywords: }ADHD; Procrastination; AI Agent; Task Management; LLM
