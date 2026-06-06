@@ -1,4 +1,7 @@
 \cleardoublepage
+
+\setlength{\parindent}{2em}
+
 \chapter{中期检查}
 
 \section{项目概况}
@@ -8,6 +11,8 @@
 \par 系统后端基于 Spring Boot 3.5.7 构建，选用 Java 21 作为开发语言，持久层使用 PostgreSQL 15 与 Redis 7，ORM 框架采用 MyBatis Plus 3.5.14。前端采用现代前端框架开发，与后端 RESTful API 对接。AI 能力通过 Spring AI Alibaba（DashScope）接入通义千问大模型，实现智能对话与任务辅助。项目配套 Docker Compose 开发环境，支持一键启动基础设施服务。
 
 \par 截至目前，本项目整体开发进度良好。后端核心功能模块（用户管理、项目管理、Agent）已全部完成开发并覆盖测试；前端各功能页面（登录、项目管理、任务看板、AI 对话等）已与后端 API 完成对接开发；数据库 Schema 设计、接口文档（Swagger/OpenAPI）及持续集成基础均已就绪。后续工作将聚焦于系统联调优化、AI 效果精调及毕业设计论文撰写。
+
+\clearpage
 
 \section{工作进展情况}
 
@@ -108,6 +113,8 @@
     \caption{Swagger 接口文档预览}
 \end{figure}
 
+\clearpage
+
 \section{问题与建议}
 
 \par Agent 模块虽然框架已搭建完成，但大模型在 ADHD 场景下的提示工程（Prompt Engineering）和工具调用链仍有优化空间。RouterNode 的意图分类准确率需要在真实使用场景中持续迭代，建议后续引入更多用户行为数据作为 Few-shot 示例以提升分类效果。
@@ -117,6 +124,8 @@
 \par 此外，系统目前缺乏支付功能，尚未形成完整的商业化闭环，无法支持会员订阅、积分充值等增值服务模式。建议后续接入主流第三方支付平台，完善支付相关的订单、对账与退款流程，为系统的可持续运营提供基础。
 
 \par 当前仅提供了 Docker Compose 开发环境配置，生产环境的容器编排、监控告警、日志收集及 CI/CD 流水线尚未规划。建议在后期补充生产部署方案，或考虑使用云原生托管平台降低运维成本。
+
+\clearpage
 
 \section{其他}
 
